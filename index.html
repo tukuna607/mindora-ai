@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080b18">
+<title>Mindora AI - All in One AI Tools</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#080b18;color:#fff;font-family:Arial,sans-serif}
+header{padding:18px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #22263d;position:sticky;top:0;background:#080b18}
+.logo{font-size:23px;font-weight:bold;color:#b9a0ff}
+.logo span{color:#fff}
+.badge{font-size:11px;background:#252044;padding:6px 9px;border-radius:20px}
+main{max-width:850px;margin:auto;padding:25px 16px 50px}
+.hero{text-align:center;padding:38px 5px 25px}
+.pill{display:inline-block;border:1px solid #514080;border-radius:30px;padding:8px 13px;color:#c7b5ff;font-size:12px}
+h1{font-size:clamp(32px,8vw,53px);line-height:1.12;margin:22px 0 12px}
+h1 span{background:linear-gradient(90deg,#bd9aff,#6c9dff);color:transparent;background-clip:text}
+.sub{color:#a7adc6;line-height:1.7;font-size:15px}
+.search{display:flex;gap:8px;margin:25px auto;max-width:600px;background:#14182b;border:1px solid #363653;border-radius:16px;padding:8px}
+.search input{flex:1;min-width:0;background:transparent;color:white;border:0;outline:0;padding:12px;font-size:15px}
+button{cursor:pointer;border:0;border-radius:11px;padding:12px 16px;color:white;background:linear-gradient(120deg,#8157ff,#496dff);font-weight:bold}
+h2{font-size:21px;margin:28px 0 15px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.card{background:linear-gradient(145deg,#171b30,#101426);border:1px solid #292e49;border-radius:16px;padding:18px 14px;cursor:pointer;transition:.2s}
+.card:active{transform:scale(.98)}
+.icon{font-size:27px}
+.card h3{font-size:16px;margin:12px 0 7px}
+.card p{font-size:12px;line-height:1.5;color:#a7adc6;margin:0}
+.panel{margin-top:24px;background:#12172a;border:1px solid #303550;border-radius:17px;padding:18px}
+.panel textarea{width:100%;min-height:110px;resize:vertical;background:#090d1b;color:white;border:1px solid #303550;border-radius:12px;padding:13px;font:14px Arial;margin:10px 0}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+.secondary{background:#282d47}
+#result{white-space:pre-wrap;overflow-wrap:anywhere;color:#e0e4ff;line-height:1.6;margin-top:15px}
+footer{text-align:center;padding:25px;color:#858ba7;font-size:12px}
+@media(min-width:600px){.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.hero{padding-top:55px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">✦ Mindora<span> AI</span></div>
+  <div class="badge">✦ ALL-IN-ONE AI</div>
+</header>
+<main>
+<section class="hero">
+  <div class="pill">✦ YOUR CREATIVE AI WORKSPACE</div>
+  <h1>One Space.<br><span>Infinite Possibilities.</span></h1>
+  <p class="sub">Write, translate, learn and create.<br>Your everyday AI tools, together in one place.</p>
+  <div class="search">
+    <input id="quick" placeholder="What would you like to create?">
+    <button onclick="openTool('writer')">Go ↗</button>
+  </div>
+</section>
+
+<h2>✦ Explore AI Tools</h2>
+<div class="grid">
+  <div class="card" onclick="openTool('chat')"><div class="icon">🤖</div><h3>AI Chat</h3><p>Ask questions and explore ideas.</p></div>
+  <div class="card" onclick="openTool('writer')"><div class="icon">✍️</div><h3>AI Writer</h3><p>Draft stories, posts and emails.</p></div>
+  <div class="card" onclick="openTool('translate')"><div class="icon">🌐</div><h3>Translator</h3><p>Translate text between languages.</p></div>
+  <div class="card" onclick="openTool('code')"><div class="icon">💻</div><h3>Code Assistant</h3><p>Plan code and understand errors.</p></div>
+  <div class="card" onclick="openTool('ideas')"><div class="icon">💡</div><h3>Idea Generator</h3><p>Discover ideas for your next project.</p></div>
+  <div class="card" onclick="openTool('summarize')"><div class="icon">📄</div><h3>Text Summarizer</h3><p>Make long text easier to review.</p></div>
+</div>
+
+<section class="panel" id="workspace">
+  <h2 id="toolTitle">✨ Welcome to Mindora AI</h2>
+  <p class="sub" id="toolDescription">Choose a tool above to get started.</p>
+  <textarea id="prompt" placeholder="Type your text or question here..."></textarea>
+  <div class="actions">
+    <button onclick="runTool()">Try Tool ↗</button>
+    <button class="secondary" onclick="clearTool()">Clear</button>
+    <button class="secondary" onclick="copyResult()">Copy Result</button>
+  </div>
+  <div id="result"></div>
+</section>
+</main>
+<footer>✦ Mindora AI · Built for ideas, learning and creativity</footer>
+<script>
+let currentTool='chat';
+const tools={
+ chat:['🤖 AI Chat','Write a question. This starter version gives a local demo response.'],
+ writer:['✍️ AI Writer','Describe what you want to write.'],
+ translate:['🌐 Translator','Enter text and select the target language in your request.'],
+ code:['💻 Code Assistant','Describe your coding task or paste an error.'],
+ ideas:['💡 Idea Generator','Describe your interests or project.'],
+ summarize:['📄 Text Summarizer','Paste text to create a short local summary.']
+};
+function openTool(name){
+ currentTool=name;
+ document.getElementById('toolTitle').textContent=tools[name][0];
+ document.getElementById('toolDescription').textContent=tools[name][1];
+ document.getElementById('prompt').value='';
+ document.getElementById('result').textContent='';
+ document.getElementById('workspace').scrollIntoView({behavior:'smooth'});
+ document.getElementById('prompt').focus();
+}
+function runTool(){
+ const input=(document.getElementById('prompt').value||document.getElementById('quick').value).trim();
+ const out=document.getElementById('result');
+ if(!input){out.textContent='Please type something first.';return;}
+ if(currentTool==='summarize'){
+   const sentences=input.match(/[^.!?]+[.!?]*/g)||[input];
+   out.textContent='Demo summary:\\n'+sentences.slice(0,3).join(' ').trim();
+ }else if(currentTool==='translate'){
+   out.textContent='Translation needs a language service connection. Your text:\\n'+input;
+ }else if(currentTool==='writer'){
+   out.textContent='Writing idea:\\n'+input+'\\n\\nStart with a clear introduction, explain your main points, and finish with a useful conclusion. Connect an AI service for full writing generation.';
+ }else if(currentTool==='code'){
+   out.textContent='Coding request received:\\n'+input+'\\n\\nTip: include your programming language and the full error message for better debugging. A real AI model connection is needed to generate and debug code.';
+ }else if(currentTool==='ideas'){
+   out.textContent='Try these next steps for your idea:\\n1. Define the main goal.\\n2. Identify who will use it.\\n3. Build a small first version.\\n4. Test it and improve it.\\n\\nYour idea: '+input;
+ }else{
+   out.textContent='Welcome to Mindora AI!\\n\\nYour question: '+input+'\\n\\nThis website is running in demo mode. Connect an AI model through a secure backend to receive real AI answers.';
+ }
+}
+function clearTool(){
+ document.getElementById('prompt').value='';
+ document.getElementById('quick').value='';
+ document.getElementById('result').textContent='';
+}
+function copyResult(){
+ const text=document.getElementById('result').textContent;
+ if(!text){alert('There is no result to copy yet.');return;}
+ if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>alert('Copied!')).catch(()=>fallbackCopy(text));}
+ else fallbackCopy(text);
+}
+function fallbackCopy(text){
+ const box=document.createElement('textarea');box.value=text;document.body.appendChild(box);box.select();
+ try{document.execCommand('copy');alert('Copied!');}catch(e){alert('Please select and copy the result manually.');}
+ box.remove();
+}
+</script>
+</body>
+</html>
